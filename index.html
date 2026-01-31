@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Suhii | 4-Page Cinematic Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #020205;
+            --neon-pink: #ff2e8c;
+            --hot-pink: #ff006e;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            perspective: 2000px;
+        }
+
+        /* --- Global Click Fix --- */
+        .clickable { cursor: pointer !important; pointer-events: auto !important; position: relative; z-index: 999; }
+
+        #main-wrapper {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        section {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            backface-visibility: hidden;
+        }
+
+        /* --- PAGE 1 --- */
+        #page1 { z-index: 100; background: radial-gradient(circle at center, #1a0510 0%, #020205 100%); }
+        .love-btn {
+            background: linear-gradient(45deg, var(--neon-pink), var(--hot-pink));
+            border: none; padding: 20px 50px; color: white; border-radius: 100px;
+            box-shadow: 0 0 30px rgba(255, 46, 140, 0.4); text-transform: uppercase; font-weight: 600;
+        }
+
+        /* --- PAGE 2 --- */
+        #page2 { display: none; z-index: 50; background: #020205; }
+        #heartCanvas { position: absolute; top: 0; left: 0; z-index: -1; }
+        .p2-container { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; z-index: 200; }
+        .teddy-target { font-size: clamp(8rem, 15vw, 12rem); transition: 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045); filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.1)); }
+        
+        .glass-letter {
+            position: absolute; width: min(90%, 420px); background: var(--glass);
+            border: 1px solid rgba(255, 46, 140, 0.3); backdrop-filter: blur(30px);
+            padding: 40px; border-radius: 40px; text-align: center;
+            transform: scale(0.5); opacity: 0; pointer-events: none;
+            transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .letter-active { transform: scale(1); opacity: 1; pointer-events: auto !important; }
+
+        /* --- PAGE 3 --- */
+        #page3 { display: none; transform: rotateY(180deg); background: #000; z-index: 1; overflow: hidden; }
+        #p3Canvas { position: absolute; width: 100%; height: 100%; opacity: 0.6; z-index: 0; }
+
+        .reel-wrap {
+            position: relative; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transform-style: preserve-3d; z-index: 10;
+        }
+
+        .slider-3d {
+            position: relative; width: 260px; height: 360px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 20px; overflow: hidden;
+            border: 2px solid var(--neon-pink);
+            background: #111; box-shadow: 0 0 20px rgba(255, 46, 140, 0.3);
+        }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        .nav-controls {
+            position: absolute; width: 100%; top: 50%; left: 0;
+            display: flex; justify-content: space-between;
+            padding: 0 20px; transform: translateY(-50%);
+            z-index: 1000; pointer-events: none;
+        }
+        .nav-btn {
+            width: 55px; height: 55px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--neon-pink);
+            color: white; font-size: 1.2rem; display: flex;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(10px); pointer-events: auto;
+        }
+
+        /* Next Button with Panda */
+        .panda-next-btn {
+            position: absolute; bottom: 80px;
+            background: white; color: black; border: none;
+            padding: 15px 35px; border-radius: 50px;
+            font-weight: 600; font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+            cursor: pointer; z-index: 2000;
+        }
+
+        /* --- PAGE 4: AESTHETIC ANIMATED VIDEO LOOK --- */
+        #page4 { 
+            display: none; 
+            background: #000;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        /* Moving Mesh Background */
+        .p4-bg {
+            position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #2b0314 0%, #020205 100%);
+            z-index: -2;
+        }
+
+        /* BIG MOVING HEART */
+        .big-heart-bg {
+            position: absolute;
+            font-size: 40rem;
+            color: rgba(255, 46, 140, 0.08);
+            filter: blur(5px);
+            animation: pulseHeart 4s infinite ease-in-out;
+            z-index: -1;
+            user-select: none;
+        }
+
+        /* AESTHETIC FRAMES */
+        .aesthetic-frame {
+            position: absolute;
+            width: 180px; height: 220px;
+            background: white;
+            padding: 10px 10px 40px 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transform: rotate(-5deg);
+            animation: floatFrame 6s infinite ease-in-out;
+            border-radius: 2px;
+        }
+        .aesthetic-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .frame-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .frame-2 { bottom: 15%; right: 10%; animation-delay: 1s; transform: rotate(8deg); }
+        .frame-3 { top: 20%; right: 15%; animation-delay: 2s; transform: rotate(-10deg); width: 140px; height: 180px; }
+
+        /* FINAL CARD CONTENT */
+        .final-content {
+            z-index: 10;
+            text-align: center;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 90%;
+            box-shadow: 0 0 50px rgba(255, 46, 140, 0.2);
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); opacity: 0.05; }
+            50% { transform: scale(1.2); opacity: 0.12; }
+        }
+
+        @keyframes floatFrame {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        /* Heart Transition */
+        #heart-transition {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 100px; height: 100px; background: var(--neon-pink); z-index: 9999;
+            pointer-events: none; clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z");
+        }
+
+        .flip-active { transform: rotateY(-180deg); }
+        @keyframes expandHeart { 0% { transform: translate(-50%, -50%) scale(0); } 100% { transform: translate(-50%, -50%) scale(120); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="main-wrapper">
+        <!-- PAGE 1 -->
+        <section id="page1">
+            <h1 style="font-weight: 200; letter-spacing: 5px; text-align: center; margin-bottom: 40px;">KUCH TOH H ISME <br> KHOLLL ✨🧸</h1>
+            <button class="clickable love-btn" onclick="goToPage2()">CLICK MATT KRNA ❤️</button>
+        </section>
+
+        <!-- PAGE 2 -->
+        <section id="page2">
+            <canvas id="heartCanvas"></canvas>
+            <div class="p2-container">
+                <div id="guide-ui" style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 3rem; color: var(--neon-pink); animation: bounce 1s infinite;">↓</div>
+                    <p style="letter-spacing: 3px; font-weight: 600;">NHI MANA KRDIYA CLICK CHAL AAB APNE UPPR KR</p>
+                </div>
+                <div class="teddy-target clickable" id="teddy" onclick="revealLetter()">🧸</div>
+                <div class="glass-letter" id="letter">
+                    <div style="font-family: 'Dancing Script'; font-size: 2rem; color: #fff;">
+                        <p style="font-size: 2.5rem; color: var(--neon-pink); margin-bottom: 10px;">AAHAA MERI JANEMAN ❤️</p>
+                        <p>EK KISSI TOH DEDO 💖</p>
+                        <p style="margin-top: 10px; font-size: 1.3rem; opacity: 0.8;">Bhadd me jaye 7-14 feb. "I LOVE UHH🙈💌💋" everyday and every second untill "SUN RISES FROM THE WEST".. mie love never fade for you mwuahhh🥹👀🫀</p>
+                        <button class="clickable" style="margin-top: 20px; padding: 10px 30px; border-radius: 50px; background: var(--neon-pink); border: none; color: white;" onclick="flipToPage3()">Next 💌</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3 -->
+        <section id="page3">
+            <canvas id="p3Canvas"></canvas>
+            <div class="reel-wrap">
+                <div class="slider-3d" id="slider">
+                    <div class="slide"><img src="IMG-20260120-WA0005.jpg"></div>
+                    <div class="slide" style="transform: rotateY(120deg) translateZ(300px);"><img src="IMG-20260124-WA0002.jpg"></div>
+                    <div class="slide" style="transform: rotateY(240deg) translateZ(300px);"><img src="WhatsApp Image 2025-11-13 at 23.25.02_a14cce60.jpg"></div>
+                </div>
+
+                <div class="nav-controls">
+                    <div class="nav-btn clickable" onclick="rotateSlider(-120)">❮</div>
+                    <div class="nav-btn clickable" onclick="rotateSlider(120)">❯</div>
+                </div>
+
+                <p style="position: absolute; bottom: 180px; font-family: 'Dancing Script'; font-size: 1.3rem; color: var(--neon-pink); text-align: center; max-width: 80%;">Joh jee bhr ke dekhne beitha tumko toh sham kya puri ummar bhi kaam lgti h ✨😭🫀</p>
+                
+                <!-- PANDA NEXT BUTTON -->
+                <button class="panda-next-btn clickable" onclick="goToPage4()">Next 🐼</button>
+            </div>
+        </section>
+
+        <!-- PAGE 4: THE AESTHETIC VIDEO PAGE -->
+        <section id="page4">
+            <div class="p4-bg"></div>
+            <div class="big-heart-bg">❤</div>
+
+            <!-- FLOATING FRAMES (Put any 3 images here) -->
+            <div class="aesthetic-frame frame-1"><img src="IMG-20260120-WA0005.jpg"></div>
+            <div class="aesthetic-frame frame-2"><img src="IMG-20260124-WA0002.jpg"></div>
+            <div class="aesthetic-frame frame-3"><img src="WhatsApp Image 2025-11-13 at 23.25.02_a14cce60.jpg"></div>
+
+            <div class="final-content">
+                <h2 style="font-family: 'Dancing Script'; font-size: 3.5rem; color: var(--neon-pink); margin-bottom: 20px;">Forever & Always</h2>
+                <p style="font-size: 1.2rem; line-height: 1.8; color: #fff; font-weight: 200;">
+                    In a world full of temporary things, you are my forever. <br>
+                    Tumse haseen hoga koi bhala? <br>
+                    tum toh voh ho jisko dekhtey hi hum mushkuraney lgte h 💖
+                    
+                </p>
+                <div style="margin-top: 30px; font-size: 2rem;">ILY SUHII 🐼💖</div>
+            </div>
+
+            <!-- Particle Effect Container -->
+            <canvas id="p4Particles" style="position: absolute; top:0; left:0; pointer-events:none;"></canvas>
+        </section>
+    </div>
+
+    <div id="heart-transition"></div>
+
+    <script>
+        let currentRotation = 0;
+
+        function goToPage2() {
+            const overlay = document.getElementById('heart-transition');
+            overlay.style.animation = "expandHeart 1.5s forwards ease-in-out";
+            setTimeout(() => {
+                document.getElementById('page1').style.display = 'none';
+                document.getElementById('page2').style.display = 'flex';
+                initP2Bg();
+                setTimeout(() => { overlay.style.animation = "none"; overlay.style.transform = "translate(-50%, -50%) scale(0)"; }, 500);
+            }, 800);
+        }
+
+        function revealLetter() {
+            const teddy = document.getElementById('teddy');
+            const letter = document.getElementById('letter');
+            const guide = document.getElementById('guide-ui');
+            teddy.style.transform = "scale(0) rotate(720deg)";
+            guide.style.opacity = "0";
+            setTimeout(() => { teddy.style.display = 'none'; letter.classList.add('letter-active'); }, 600);
+        }
+
+        function flipToPage3() {
+            const wrapper = document.getElementById('main-wrapper');
+            document.getElementById('page3').style.display = 'flex';
+            wrapper.classList.add('flip-active');
+            initP3Bg();
+            setTimeout(() => { document.getElementById('page2').style.display = 'none'; }, 1200);
+        }
+
+        function rotateSlider(deg) {
+            currentRotation += deg;
+            document.getElementById('slider').style.transform = `rotateY(${currentRotation}deg)`;
+        }
+
+        // --- TRANSITION TO PAGE 4 ---
+        function goToPage4() {
+            const overlay = document.getElementById('heart-transition');
+            overlay.style.animation = "expandHeart 1.5s forwards ease-in-out";
+            setTimeout(() => {
+                document.getElementById('page3').style.display = 'none';
+                document.getElementById('page4').style.display = 'flex';
+                document.getElementById('main-wrapper').style.transform = "rotateY(0deg)"; // Reset flip
+                initP4Particles();
+                setTimeout(() => { overlay.style.animation = "none"; overlay.style.transform = "translate(-50%, -50%) scale(0)"; }, 500);
+            }, 800);
+        }
+
+        // --- BACKGROUNDS ---
+        function initP2Bg() {
+            const canvas = document.getElementById('heartCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let p = [];
+            for(let i=0; i<40; i++) p.push({x: Math.random()*canvas.width, y: canvas.height+10, s: Math.random()*2+1});
+            function draw() {
+                ctx.fillStyle = '#020205'; ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = '#ff2e8c';
+                p.forEach(h => { ctx.fillText('❤️', h.x, h.y); h.y -= h.s; if(h.y < -20) h.y = canvas.height+20; });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function initP3Bg() {
+            const canvas = document.getElementById('p3Canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let hearts = [];
+            for(let i=0; i<30; i++) hearts.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, o: Math.random()});
+            function draw() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                hearts.forEach(h => {
+                    ctx.globalAlpha = Math.abs(Math.sin(Date.now()*0.001 + h.o*10));
+                    ctx.fillText('💖', h.x, h.y);
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function initP4Particles() {
+            const canvas = document.getElementById('p4Particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let particles = [];
+            for(let i=0; i<50; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*1+0.5, o: Math.random()});
+            function draw() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                ctx.fillStyle = "white";
+                particles.forEach(p => {
+                    ctx.globalAlpha = Math.abs(Math.sin(Date.now()*0.001 + p.o*10));
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
+                    ctx.fill();
+                    p.y -= 0.3; if(p.y < 0) p.y = canvas.height;
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+    </script>
+</body>
+</html>
