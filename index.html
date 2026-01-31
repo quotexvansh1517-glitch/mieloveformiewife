@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vansh.create15</title>
+    <title>For Suhii | 4-Page Cinematic Experience</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,6 +21,28 @@
             overflow: hidden;
             height: 100vh;
             perspective: 2000px;
+        }
+
+        /* --- Music Toggle Button --- */
+        #music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--neon-pink);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: 0.3s;
         }
 
         /* --- Global Click Fix --- */
@@ -118,14 +140,12 @@
             overflow: hidden;
         }
 
-        /* Moving Mesh Background */
         .p4-bg {
             position: absolute; width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, #2b0314 0%, #020205 100%);
             z-index: -2;
         }
 
-        /* BIG MOVING HEART */
         .big-heart-bg {
             position: absolute;
             font-size: 40rem;
@@ -136,7 +156,6 @@
             user-select: none;
         }
 
-        /* AESTHETIC FRAMES */
         .aesthetic-frame {
             position: absolute;
             width: 180px; height: 220px;
@@ -152,7 +171,6 @@
         .frame-2 { bottom: 15%; right: 10%; animation-delay: 1s; transform: rotate(8deg); }
         .frame-3 { top: 20%; right: 15%; animation-delay: 2s; transform: rotate(-10deg); width: 140px; height: 180px; }
 
-        /* FINAL CARD CONTENT */
         .final-content {
             z-index: 10;
             text-align: center;
@@ -164,7 +182,6 @@
             box-shadow: 0 0 50px rgba(255, 46, 140, 0.2);
         }
 
-        /* ANIMATIONS */
         @keyframes pulseHeart {
             0%, 100% { transform: scale(1); opacity: 0.05; }
             50% { transform: scale(1.2); opacity: 0.12; }
@@ -175,7 +192,6 @@
             50% { transform: translateY(-30px) rotate(5deg); }
         }
 
-        /* Heart Transition */
         #heart-transition {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
             width: 100px; height: 100px; background: var(--neon-pink); z-index: 9999;
@@ -189,11 +205,20 @@
 </head>
 <body>
 
+    <!-- MUSIC ELEMENT -->
+    <!-- Yahan src mein apna song link daalein (Direct MP3 URL) -->
+    <audio id="bgMusic" loop>
+        <source src="daleng_dale.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Control Button -->
+    <div id="music-control" onclick="toggleMusic()">🎵</div>
+
     <div id="main-wrapper">
         <!-- PAGE 1 -->
         <section id="page1">
             <h1 style="font-weight: 200; letter-spacing: 5px; text-align: center; margin-bottom: 40px;">KUCH TOH H ISME <br> KHOLLL ✨🧸</h1>
-            <button class="clickable love-btn" onclick="goToPage2()">CLICK MATT KRNA ❤️</button>
+            <button class="clickable love-btn" onclick="startExperience()">CLICK MATT KRNA ❤️</button>
         </section>
 
         <!-- PAGE 2 -->
@@ -234,17 +259,15 @@
 
                 <p style="position: absolute; bottom: 180px; font-family: 'Dancing Script'; font-size: 1.3rem; color: var(--neon-pink); text-align: center; max-width: 80%;">Joh jee bhr ke dekhne beitha tumko toh sham kya puri ummar bhi kaam lgti h ✨😭🫀</p>
                 
-                <!-- PANDA NEXT BUTTON -->
                 <button class="panda-next-btn clickable" onclick="goToPage4()">Next 🐼</button>
             </div>
         </section>
 
-        <!-- PAGE 4: THE AESTHETIC VIDEO PAGE -->
+        <!-- PAGE 4 -->
         <section id="page4">
             <div class="p4-bg"></div>
             <div class="big-heart-bg">❤</div>
 
-            <!-- FLOATING FRAMES (Put any 3 images here) -->
             <div class="aesthetic-frame frame-1"><img src="IMG-20260120-WA0005.jpg"></div>
             <div class="aesthetic-frame frame-2"><img src="IMG-20260124-WA0002.jpg"></div>
             <div class="aesthetic-frame frame-3"><img src="WhatsApp Image 2025-11-13 at 23.25.02_a14cce60.jpg"></div>
@@ -255,12 +278,10 @@
                     In a world full of temporary things, you are my forever. <br>
                     Tumse haseen hoga koi bhala? <br>
                     tum toh voh ho jisko dekhtey hi hum mushkuraney lgte h 💖
-                    
                 </p>
                 <div style="margin-top: 30px; font-size: 2rem;">ILY SUHII 🐼💖</div>
             </div>
 
-            <!-- Particle Effect Container -->
             <canvas id="p4Particles" style="position: absolute; top:0; left:0; pointer-events:none;"></canvas>
         </section>
     </div>
@@ -269,6 +290,26 @@
 
     <script>
         let currentRotation = 0;
+        const music = document.getElementById('bgMusic');
+
+        // Combined Function to Start Music and Move to Page 2
+        function startExperience() {
+            // Start Music
+            music.play().catch(e => console.log("Music play failed due to browser policy"));
+            
+            // Go to Page 2
+            goToPage2();
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                document.getElementById('music-control').innerText = "🎵";
+            } else {
+                music.pause();
+                document.getElementById('music-control').innerText = "🔇";
+            }
+        }
 
         function goToPage2() {
             const overlay = document.getElementById('heart-transition');
@@ -277,7 +318,10 @@
                 document.getElementById('page1').style.display = 'none';
                 document.getElementById('page2').style.display = 'flex';
                 initP2Bg();
-                setTimeout(() => { overlay.style.animation = "none"; overlay.style.transform = "translate(-50%, -50%) scale(0)"; }, 500);
+                setTimeout(() => { 
+                    overlay.style.animation = "none"; 
+                    overlay.style.transform = "translate(-50%, -50%) scale(0)"; 
+                }, 500);
             }, 800);
         }
 
@@ -303,16 +347,18 @@
             document.getElementById('slider').style.transform = `rotateY(${currentRotation}deg)`;
         }
 
-        // --- TRANSITION TO PAGE 4 ---
         function goToPage4() {
             const overlay = document.getElementById('heart-transition');
             overlay.style.animation = "expandHeart 1.5s forwards ease-in-out";
             setTimeout(() => {
                 document.getElementById('page3').style.display = 'none';
                 document.getElementById('page4').style.display = 'flex';
-                document.getElementById('main-wrapper').style.transform = "rotateY(0deg)"; // Reset flip
+                document.getElementById('main-wrapper').style.transform = "rotateY(0deg)";
                 initP4Particles();
-                setTimeout(() => { overlay.style.animation = "none"; overlay.style.transform = "translate(-50%, -50%) scale(0)"; }, 500);
+                setTimeout(() => { 
+                    overlay.style.animation = "none"; 
+                    overlay.style.transform = "translate(-50%, -50%) scale(0)"; 
+                }, 500);
             }, 800);
         }
 
@@ -371,5 +417,4 @@
         }
     </script>
 </body>
-
 </html>
